@@ -11,7 +11,7 @@ def read_configuration(file_path):
 
 # Get the list of games and playtime for the specified user
 def get_top_games(api_key, steam_id, game_count):
-    url = f'https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key={api_key}&steamid={steam_id}&format=json'
+    url = f'https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key={api_key}&steamid={steam_id}&format=json&include_played_free_games=1'
     response = requests.get(url)
     
     if response.status_code == 200:
@@ -64,9 +64,9 @@ def display_top_games_table(top_games, game_count):
             app_id = game['appid']
             game_name, price = get_game_details(app_id)
             playtime_hours = convert_to_hours(game['playtime_forever'])
-            table_data.append([idx, game_name, f"{playtime_hours:.2f} hours", price])
+            table_data.append([idx, game_name, app_id, f"{playtime_hours:.2f} hours", price])
 
-        headers = ["Rank", "Game", "Playtime", "Price"]
+        headers = ["Rank", "Game", "ID", "Playtime", "Price"]
         print(tabulate(table_data, headers=headers, tablefmt="grid"))
     else:
         print("No data available")
